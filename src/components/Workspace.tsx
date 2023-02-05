@@ -50,6 +50,7 @@ export default function Workspace() {
   const [swcConfig] = useAtom(swcConfigAtom)
   const [fileName] = useAtom(fileNameAtom)
   const [viewMode, setViewMode] = useState('ast')
+
   const output = useMemo(() => {
     if (error) {
       return Err(String(error))
@@ -66,6 +67,7 @@ export default function Workspace() {
         return transform({ code, fileName, config: swcConfig, swc })
     }
   }, [code, fileName, swc, error, swcConfig, viewMode])
+
   const toast = useToast()
 
   useEffect(() => {

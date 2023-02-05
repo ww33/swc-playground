@@ -56,11 +56,14 @@ export default function InputEditor({ output }: Props) {
   const toast = useToast()
 
   useEffect(() => {
-    monaco?.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-      noSyntaxValidation: true,
-      noSemanticValidation: true,
-      noSuggestionDiagnostics: true,
-    })
+    if(monaco) {
+      monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+        noSyntaxValidation: true,
+        noSemanticValidation: true,
+        noSuggestionDiagnostics: true,
+      })
+
+    }
   }, [monaco])
 
   useEffect(() => {
@@ -176,7 +179,10 @@ export default function InputEditor({ output }: Props) {
       setCode(value)
     }
   }
+  const handleRun = () => {
 
+
+  }
   const language =
     swcConfig.jsc.parser.syntax === 'ecmascript' ? 'javascript' : 'typescript'
 
@@ -188,10 +194,10 @@ export default function InputEditor({ output }: Props) {
         </Heading>
         <HStack spacing="10px">
           <Button
-            colorScheme="blackAlpha"
+            colorScheme="red"
             size="xs"
             leftIcon={<CgFileDocument />}
-            onClick={handleIssueReportClick}
+            onClick={handleRun}
           >
             Run
           </Button>
