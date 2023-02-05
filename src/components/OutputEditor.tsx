@@ -8,12 +8,12 @@ import {
   useBgColor,
   useBorderColor,
   useMonacoThemeValue,
-} from '../utils'
+} from '../config/utils'
 import type {
   ParserResult,
   TransformationOutput,
   TransformationResult,
-} from '../swc'
+} from '../config/swc'
 import stripAnsi from 'strip-ansi'
 
 function isTransformedCode(value: unknown): value is TransformationOutput {

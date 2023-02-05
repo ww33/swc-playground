@@ -5,9 +5,9 @@ import { Center, CircularProgress, useToast, VStack } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { loader } from '@monaco-editor/react'
 import { Err } from 'ts-results'
-import { codeAtom, fileNameAtom, swcConfigAtom } from '../state'
-import { loadSwc, parse, swcVersionAtom, transform } from '../swc'
-import type { AST } from '../swc'
+import { codeAtom, fileNameAtom, swcConfigAtom } from '../config/state'
+import { loadSwc, parse, swcVersionAtom, transform } from '../config/swc'
+import type { AST } from '../config/swc'
 
 import Configuration from './Configuration'
 import VersionSelect from './VersionSelect'
@@ -49,7 +49,7 @@ export default function Workspace() {
   const [code] = useAtom(codeAtom)
   const [swcConfig] = useAtom(swcConfigAtom)
   const [fileName] = useAtom(fileNameAtom)
-  const [viewMode, setViewMode] = useState('code')
+  const [viewMode, setViewMode] = useState('ast')
   const output = useMemo(() => {
     if (error) {
       return Err(String(error))
@@ -58,7 +58,6 @@ export default function Workspace() {
     if (!swc) {
       return Err('Loading swc...')
     }
-
     switch (viewMode) {
       case 'ast':
         return parse({ code, config: swcConfig, swc })

@@ -19,9 +19,9 @@ import { useAtom } from 'jotai'
 import {
   editorOptions as sharedEditorOptions,
   useMonacoThemeValue,
-} from '../utils'
-import { swcConfigAtom } from '../state'
-import { configSchema } from '../swc'
+} from '../config/utils'
+import { swcConfigAtom } from '../config/state'
+import { configSchema } from '../config/swc'
 
 const editorOptions: editor.IEditorConstructionOptions = {
   ...sharedEditorOptions,

@@ -1,15 +1,16 @@
 import { useEffect } from 'react'
 import type * as React from 'react'
 import { useAtom } from 'jotai'
+import styled from '@emotion/styled'
 import {
   Flex,
   FormControl,
   FormLabel,
   Heading,
   Input,
-  Select,
+  Select as Select_,
   Switch,
-  VStack,
+  VStack
 } from '@chakra-ui/react'
 import { Base64 } from 'js-base64'
 import { ungzip } from 'pako'
@@ -17,13 +18,13 @@ import {
   defaultCompressOptions,
   defaultEnvOptions,
   defaultMangleOptions,
-  swcConfigAtom,
-} from '../state'
-import type { EsVersion, ModuleOptions, ParserOptions } from '../swc'
+  swcConfigAtom
+} from '../config/state'
+import type { EsVersion, ModuleOptions, ParserOptions } from '../config/swc'
 import CompressOptionsModal from './CompressOptionsModal'
 import MangleOptionsModal from './MangleOptionsModal'
 import ConfigEditorModal from './ConfigEditorModal'
-import { useBgColor, useBorderColor } from '../utils'
+import { useBgColor, useBorderColor } from '../config/utils'
 
 const STORAGE_KEY = 'v1.config'
 
@@ -66,8 +67,8 @@ export default function Configuration() {
         ...config,
         jsc: {
           ...config.jsc,
-          parser: parserOptions,
-        },
+          parser: parserOptions
+        }
       }
     })
   }
@@ -77,8 +78,8 @@ export default function Configuration() {
       ...config,
       jsc: {
         ...config.jsc,
-        target: event.target.value as EsVersion,
-      },
+        target: event.target.value as EsVersion
+      }
     }))
   }
 
@@ -86,14 +87,14 @@ export default function Configuration() {
     setSwcConfig((config) => ({
       ...config,
       module: {
-        type: event.target.value as ModuleOptions['type'],
-      },
+        type: event.target.value as ModuleOptions['type']
+      }
     }))
   }
 
   const handleSourceTypeChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLSelectElement>) => {
+                                    target: { value }
+                                  }: React.ChangeEvent<HTMLSelectElement>) => {
     const isModule = (() => {
       switch (value) {
         case 'module':
@@ -112,8 +113,8 @@ export default function Configuration() {
       ...config,
       jsc: {
         ...config.jsc,
-        parser: { ...config.jsc.parser, jsx: event.target.checked },
-      },
+        parser: { ...config.jsc.parser, jsx: event.target.checked }
+      }
     }))
   }
 
@@ -122,15 +123,15 @@ export default function Configuration() {
       ...config,
       jsc: {
         ...config.jsc,
-        parser: { ...config.jsc.parser, tsx: event.target.checked },
-      },
+        parser: { ...config.jsc.parser, tsx: event.target.checked }
+      }
     }))
   }
 
   const handleToggleMinify = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSwcConfig((config) => ({
       ...config,
-      minify: event.target.checked,
+      minify: event.target.checked
     }))
   }
 
@@ -140,8 +141,8 @@ export default function Configuration() {
       ...config,
       jsc: {
         ...config.jsc,
-        minify: { ...config.jsc.minify, compress: options },
-      },
+        minify: { ...config.jsc.minify, compress: options }
+      }
     }))
   }
 
@@ -149,14 +150,14 @@ export default function Configuration() {
     const options = event.target.checked ? defaultMangleOptions : false
     setSwcConfig((config) => ({
       ...config,
-      jsc: { ...config.jsc, minify: { ...config.jsc.minify, mangle: options } },
+      jsc: { ...config.jsc, minify: { ...config.jsc.minify, mangle: options } }
     }))
   }
 
   const handleToggleLoose = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSwcConfig((config) => ({
       ...config,
-      jsc: { ...config.jsc, loose: event.target.checked },
+      jsc: { ...config.jsc, loose: event.target.checked }
     }))
   }
 
@@ -172,7 +173,7 @@ export default function Configuration() {
   ) => {
     setSwcConfig((config) => ({
       ...config,
-      env: { ...config.env, targets: event.target.value },
+      env: { ...config.env, targets: event.target.value }
     }))
   }
 
@@ -181,7 +182,7 @@ export default function Configuration() {
   ) => {
     setSwcConfig((config) => ({
       ...config,
-      env: { ...config.env, bugfixes: event.target.checked ? true : undefined },
+      env: { ...config.env, bugfixes: event.target.checked ? true : undefined }
     }))
   }
 
@@ -242,7 +243,7 @@ export default function Configuration() {
               <option value="systemjs">SystemJS</option>
             </Select>
           </FormControl>
-          <FormControl>
+          <FormControl cursor="pointer">
             <FormLabel htmlFor="swc-source-type">Source Type</FormLabel>
             <Select
               id="swc-source-type"
@@ -357,3 +358,5 @@ export default function Configuration() {
     </Flex>
   )
 }
+
+const Select = styled(Select_)`cursor: pointer;`

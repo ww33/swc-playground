@@ -15,8 +15,8 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
-import { swcConfigAtom } from '../state'
-import type { MangleOptions } from '../swc'
+import { swcConfigAtom } from '../config/state'
+import type { MangleOptions } from '../config/swc'
 
 export default function MangleOptionsModal() {
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)

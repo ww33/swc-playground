@@ -6,15 +6,15 @@ import { Box, Button, Flex, Heading, useToast, HStack } from '@chakra-ui/react'
 import { CgShare, CgFileDocument } from 'react-icons/cg'
 import { Base64 } from 'js-base64'
 import { gzip, ungzip } from 'pako'
-import { codeAtom, swcConfigAtom } from '../state'
+import { codeAtom, swcConfigAtom } from '../config/state'
 import {
   editorOptions,
   parseSWCError,
   useBorderColor,
   useMonacoThemeValue,
-} from '../utils'
-import { swcVersionAtom, type Config } from '../swc'
-import type { ParserResult, TransformationResult } from '../swc'
+} from '../config/utils'
+import { swcVersionAtom, Config } from '../config/swc'
+import type { ParserResult, TransformationResult } from '../config/swc'
 
 const STORAGE_KEY = 'v1.code'
 
@@ -187,6 +187,14 @@ export default function InputEditor({ output }: Props) {
           Input
         </Heading>
         <HStack spacing="10px">
+          <Button
+            colorScheme="blackAlpha"
+            size="xs"
+            leftIcon={<CgFileDocument />}
+            onClick={handleIssueReportClick}
+          >
+            Run
+          </Button>
           <Button
             size="xs"
             leftIcon={<CgFileDocument />}

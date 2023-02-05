@@ -13,8 +13,8 @@ import {
 } from '@chakra-ui/react'
 import { HiExternalLink } from 'react-icons/hi'
 import semver from 'semver'
-import { swcVersionAtom } from '../swc'
-import { useBgColor, useBorderColor } from '../utils'
+import { swcVersionAtom } from '../config/swc'
+import { useBgColor, useBorderColor } from '../config/utils'
 
 type PackageInfo = {
   tags: {

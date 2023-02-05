@@ -22,8 +22,8 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
-import { swcConfigAtom } from '../state'
-import type { CompressOptions } from '../swc'
+import { swcConfigAtom } from '../config/state'
+import type { CompressOptions } from '../config/swc'
 
 export default function CompressOptionsModal() {
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
