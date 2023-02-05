@@ -1,11 +1,13 @@
-import { createStore, atom } from 'jotai/vanilla'
-export { atom } from 'jotai'
+import { createStore } from 'jotai/vanilla'
+import { atom} from 'jotai'
 
-export const myStore = createStore()
+export const store = createStore()
 
+export const atomCount = atom(0)
 
-const countAtom = atom(0)
-myStore.set(countAtom, 1)
-myStore.sub(countAtom, () => {
-  console.log('countAtom value is changed to', myStore.get(countAtom))
-})
+/*defaultStore.sub(atomCount, () => {
+  console.log('countAtom value is changed to', defaultStore.get(atomCount))
+})*/
+
+//defaultStore.set(atomCount, 0)
+

@@ -20,7 +20,7 @@
     "@next/bundle-analyzer": "^12.3.4",
     "eslint-config-next": "^13.1.6",
     "framer-motion": "^8.5.4",
-    "jotai": "^1.13.1",
+    "jotai": "^2.0.0",
     "js-base64": "^3.7.4",
     "monaco-editor": "^0.34.1",
     "next": "^13.1.6",

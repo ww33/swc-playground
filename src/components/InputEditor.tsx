@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useRef } from 'react'
 import type { editor } from 'monaco-editor'
 import Editor, { useMonaco } from '@monaco-editor/react'
-import { useAtom } from 'jotai'
 import { Box, Button, Flex, Heading, useToast, HStack } from '@chakra-ui/react'
 import { CgShare, CgFileDocument } from 'react-icons/cg'
 import { Base64 } from 'js-base64'
 import { gzip, ungzip } from 'pako'
+import { useAtom, getDefaultStore } from 'jotai'
+
+
 import { codeAtom, swcConfigAtom } from '../config/state'
 import {
   editorOptions,
@@ -15,6 +17,8 @@ import {
 } from '../config/utils'
 import { swcVersionAtom, Config } from '../config/swc'
 import type { ParserResult, TransformationResult } from '../config/swc'
+import {atomCount} from '../store'
+import {test} from '../store/test'
 
 const STORAGE_KEY = 'v1.code'
 
@@ -54,6 +58,7 @@ export default function InputEditor({ output }: Props) {
   const monaco = useMonaco()
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
   const toast = useToast()
+  const defaultStore = getDefaultStore()
 
   useEffect(() => {
     if(monaco) {
@@ -179,10 +184,15 @@ export default function InputEditor({ output }: Props) {
       setCode(value)
     }
   }
+
   const handleRun = () => {
-
-
+    defaultStore.set(atomCount, defaultStore.get(atomCount)+1);
+    //console.log(defaultStore.get(atomCount))
+    /*const {x, y} = state
+    setState({x,y: y+ 1})
+    run()*/
   }
+
   const language =
     swcConfig.jsc.parser.syntax === 'ecmascript' ? 'javascript' : 'typescript'
 
@@ -198,6 +208,14 @@ export default function InputEditor({ output }: Props) {
             size="xs"
             leftIcon={<CgFileDocument />}
             onClick={handleRun}
+          >
+            Run
+          </Button>
+          <Button
+            colorScheme="telegram"
+            size="xs"
+            leftIcon={<CgFileDocument />}
+            onClick={test}
           >
             Run
           </Button>
