@@ -1,12 +1,13 @@
 import { getDefaultStore } from 'jotai'
-import {atomCount} from './index'
+import { atomEs5 } from './index'
+//import {swcConfig} from '../config/settings'
 
-const defaultStore = getDefaultStore()
-defaultStore.sub(atomCount, () => {
-  console.log('!countAtom value is changed to', defaultStore.get(atomCount))
+const store = getDefaultStore()
+
+store.sub(atomEs5, () => {
+  console.log(store.get(atomEs5))
 })
 
-
-export const test = () =>{
+export const test = () => {
   //console.log(defaultStore.get(atomCount))
 }

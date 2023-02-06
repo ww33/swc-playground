@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useAtom } from 'jotai'
+import { useAtom, getDefaultStore } from 'jotai'
 import useSWR from 'swr'
 import { Center, CircularProgress, useToast, VStack } from '@chakra-ui/react'
 import styled from '@emotion/styled'
@@ -14,33 +14,7 @@ import VersionSelect from './VersionSelect'
 import InputEditor from './InputEditor'
 import OutputEditor from './OutputEditor'
 
-const Main = styled.main`
-  display: grid;
-  padding: 1em;
-  gap: 1em;
-
-  grid-template-columns: 1fr;
-  grid-template-rows: repeat(3, 1fr);
-  grid-template-areas: 'sidebar' 'input' 'output';
-
-  min-height: 88vh;
-
-  @media screen and (min-width: 600px) {
-    grid-template-columns: 256px 1fr;
-    grid-template-rows: repeat(2, 1fr);
-    grid-template-areas: 'sidebar input' 'sidebar output';
-
-    min-height: calc(100vh - 80px);
-  }
-
-  @media screen and (min-width: 1200px) {
-    grid-template-columns: 256px repeat(2, 1fr);
-    grid-template-rows: 1fr;
-    grid-template-areas: 'sidebar input output';
-
-    min-height: calc(100vh - 80px);
-  }
-`
+import {atomEs5} from '../store'
 
 export default function Workspace() {
   const { data: monaco } = useSWR('monaco', () => loader.init())
@@ -49,7 +23,8 @@ export default function Workspace() {
   const [code] = useAtom(codeAtom)
   const [swcConfig] = useAtom(swcConfigAtom)
   const [fileName] = useAtom(fileNameAtom)
-  const [viewMode, setViewMode] = useState('ast')
+  const [viewMode, setViewMode] = useState('code')
+  const store = getDefaultStore()
 
   const output = useMemo(() => {
     if (error) {
@@ -67,6 +42,12 @@ export default function Workspace() {
         return transform({ code, fileName, config: swcConfig, swc })
     }
   }, [code, fileName, swc, error, swcConfig, viewMode])
+
+  useEffect(() => {
+    if(output.ok){ // @ts-ignore
+      store.set(atomEs5, output.val.code)
+    }
+  }, [output])
 
   const toast = useToast()
 
@@ -96,7 +77,7 @@ export default function Workspace() {
     )
   }
 
-  if (output.ok === true && viewMode === 'ast') {
+  if (output.ok && viewMode === 'ast') {
     const val = output.val as AST
     adjustOffsetOfAst(val, val.span.start)
   }
@@ -142,3 +123,31 @@ function isSpan(obj: unknown): obj is { start: number; end: number } {
     typeof obj === 'object' && obj !== null && 'start' in obj && 'end' in obj
   )
 }
+
+const Main = styled.main`
+  display: grid;
+  padding: 1em;
+  gap: 1em;
+
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-areas: 'sidebar' 'input' 'output';
+
+  min-height: 88vh;
+
+  @media screen and (min-width: 600px) {
+    grid-template-columns: 256px 1fr;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-areas: 'sidebar input' 'sidebar output';
+
+    min-height: calc(100vh - 80px);
+  }
+
+  @media screen and (min-width: 1200px) {
+    grid-template-columns: 256px repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-template-areas: 'sidebar input output';
+
+    min-height: calc(100vh - 80px);
+  }
+`
