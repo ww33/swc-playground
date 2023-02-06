@@ -5,34 +5,35 @@ const store = getDefaultStore()
 
 const Tttt = `
 {
-  x: number,
-  y:number,
-  z:number
+  id: number
 }`
 
 export const extraLib = `
-  let ttt: ${Tttt}
+  let item: ${Tttt}
   const logger = (val) => {}
 `
+const data = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }]
 
 export const start = ({ Interpreter }) => {
   const code = store.get(atomEs5)
 
-  const initFunc = function (interpreter, globalObject) {
-    const ttt = interpreter.nativeToPseudo({ x: 4, y: 4, z: 6 })
-    interpreter.setProperty(globalObject, 'ttt', ttt)
+  let result = 0
+  for (const item of data) {
 
-    const wrapper = function logger(text) {
-      return console.log(text)
+    const initFunc = function (interpreter, glObj) {
+
+      interpreter.setProperty(glObj, 'item', interpreter.nativeToPseudo(item))
+      interpreter.setProperty(
+        glObj,
+        'logger',
+        interpreter.createNativeFunction((val) => {
+          result= result  + interpreter.pseudoToNative(val)
+        })
+      )
     }
 
-    interpreter.setProperty(
-      globalObject,
-      'logger',
-      interpreter.createNativeFunction(wrapper)
-    )
+    const myInterpreter = new Interpreter(code, initFunc)
+    myInterpreter.run()
   }
-
-  const myInterpreter = new Interpreter(code, initFunc)
-  myInterpreter.run()
+  console.log({result})
 }

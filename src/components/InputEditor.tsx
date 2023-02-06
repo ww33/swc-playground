@@ -41,6 +41,7 @@ export default function InputEditor({ output }: Props) {
         noSemanticValidation: true,
         noSuggestionDiagnostics: true,
       })
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(extraLib)
     }
   }, [monaco])
 
@@ -49,7 +50,7 @@ export default function InputEditor({ output }: Props) {
     if (!monaco || !model) {
       return
     }
-    monaco.languages.typescript.typescriptDefaults.addExtraLib(extraLib)
+
     if (output.err) {
       const markers = Array.from(parseSWCError(output.val)).map(
         ([_, message, line, col]): editor.IMarkerData => {
