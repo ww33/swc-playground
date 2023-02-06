@@ -5,8 +5,7 @@ import { Box, Button, Flex, Heading, useToast, HStack } from '@chakra-ui/react'
 import { CgShare, CgFileDocument } from 'react-icons/cg'
 import { Base64 } from 'js-base64'
 import { gzip, ungzip } from 'pako'
-import { useAtom, getDefaultStore } from 'jotai'
-
+import { useAtom } from 'jotai'
 
 import { codeAtom, swcConfigAtom } from '../config/state'
 import {
@@ -15,35 +14,11 @@ import {
   useBorderColor,
   useMonacoThemeValue,
 } from '../config/utils'
-import { swcVersionAtom, Config } from '../config/swc'
+import { swcVersionAtom } from '../config/swc'
 import type { ParserResult, TransformationResult } from '../config/swc'
-import {atomCount} from '../store'
-import {test} from '../store/test'
+import { start } from '../store/start'
 
 const STORAGE_KEY = 'v1.code'
-
-function getIssueReportUrl({
-  code,
-  version,
-  config,
-  playgroundLink,
-}: {
-  code: string
-  version: string
-  config: Config
-  playgroundLink: string
-}): string {
-  const reportUrl = new URL(
-    `https://github.com/swc-project/swc/issues/new?assignees=&labels=C-bug&template=bug_report.yml`
-  )
-
-  reportUrl.searchParams.set('code', code)
-  reportUrl.searchParams.set('config', JSON.stringify(config, null, 2))
-  reportUrl.searchParams.set('repro-link', playgroundLink)
-  reportUrl.searchParams.set('version', version)
-
-  return reportUrl.toString()
-}
 
 interface Props {
   output: TransformationResult | ParserResult
@@ -58,16 +33,14 @@ export default function InputEditor({ output }: Props) {
   const monaco = useMonaco()
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
   const toast = useToast()
-  const defaultStore = getDefaultStore()
 
   useEffect(() => {
-    if(monaco) {
+    if (monaco) {
       monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
         noSyntaxValidation: true,
         noSemanticValidation: true,
         noSuggestionDiagnostics: true,
       })
-
     }
   }, [monaco])
 
@@ -125,32 +98,6 @@ export default function InputEditor({ output }: Props) {
     return url.toString()
   }, [code, swcConfig, swcVersion])
 
-  const issueReportUrl = useMemo(
-    () =>
-      getIssueReportUrl({
-        code,
-        config: swcConfig,
-        version: swcVersion,
-        playgroundLink: shareUrl,
-      }),
-    [code, swcConfig, swcVersion, shareUrl]
-  )
-
-  const handleIssueReportClick = () => {
-    if (code.length > 2000) {
-      toast({
-        title: 'Code too long',
-        description:
-          'Your input is too large to share. Please copy the code and paste it into the issue.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      })
-      return
-    }
-    window.open(issueReportUrl, '_blank')
-  }
-
   const handleShare = async () => {
     if (!navigator.clipboard) {
       toast({
@@ -185,8 +132,9 @@ export default function InputEditor({ output }: Props) {
     }
   }
 
-  const handleRun = () => {
-    defaultStore.set(atomCount, defaultStore.get(atomCount)+1);
+  const handleStart = () => {
+    start()
+    //efaultStore.set(atomCount, defaultStore.get(atomCount)+1);
     //console.log(defaultStore.get(atomCount))
     /*const {x, y} = state
     setState({x,y: y+ 1})
@@ -207,25 +155,11 @@ export default function InputEditor({ output }: Props) {
             colorScheme="red"
             size="xs"
             leftIcon={<CgFileDocument />}
-            onClick={handleRun}
+            onClick={handleStart}
           >
             Run
           </Button>
-          <Button
-            colorScheme="telegram"
-            size="xs"
-            leftIcon={<CgFileDocument />}
-            onClick={test}
-          >
-            Run
-          </Button>
-          <Button
-            size="xs"
-            leftIcon={<CgFileDocument />}
-            onClick={handleIssueReportClick}
-          >
-            Report Issue
-          </Button>
+
           <Button size="xs" leftIcon={<CgShare />} onClick={handleShare}>
             Share
           </Button>

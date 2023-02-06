@@ -14,7 +14,7 @@ import VersionSelect from './VersionSelect'
 import InputEditor from './InputEditor'
 import OutputEditor from './OutputEditor'
 
-import {atomEs5} from '../store'
+import { atomEs5 } from '../store'
 
 export default function Workspace() {
   const { data: monaco } = useSWR('monaco', () => loader.init())
@@ -44,8 +44,12 @@ export default function Workspace() {
   }, [code, fileName, swc, error, swcConfig, viewMode])
 
   useEffect(() => {
-    if(output.ok){ // @ts-ignore
+    // @ts-ignore
+    if (output?.val?.code) {
+      // @ts-ignore
       store.set(atomEs5, output.val.code)
+      // @ts-ignore
+      //setCodeEs5(output.val.code)
     }
   }, [output])
 
