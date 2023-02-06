@@ -13,6 +13,7 @@ function App({ Component, pageProps }: AppProps) {
         <Head>
           <title>SWC Playground</title>
           <link rel="shortcut icon" type="image/svg" href="/swc.svg" />
+          <script type="text/javascript" src="js/acorn_interpreter.js"></script>
         </Head>
         <Component {...pageProps} />
       </ChakraProvider>

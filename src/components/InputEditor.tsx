@@ -16,7 +16,7 @@ import {
 } from '../config/utils'
 import { swcVersionAtom } from '../config/swc'
 import type { ParserResult, TransformationResult } from '../config/swc'
-import { start } from '../store/start'
+import { start, extraLib } from '../store/start'
 
 const STORAGE_KEY = 'v1.code'
 
@@ -49,7 +49,7 @@ export default function InputEditor({ output }: Props) {
     if (!monaco || !model) {
       return
     }
-
+    monaco.languages.typescript.typescriptDefaults.addExtraLib(extraLib)
     if (output.err) {
       const markers = Array.from(parseSWCError(output.val)).map(
         ([_, message, line, col]): editor.IMarkerData => {
@@ -133,7 +133,9 @@ export default function InputEditor({ output }: Props) {
   }
 
   const handleStart = () => {
-    start()
+    // @ts-ignore
+    const Interpreter = window.Interpreter
+    start({ Interpreter })
     //efaultStore.set(atomCount, defaultStore.get(atomCount)+1);
     //console.log(defaultStore.get(atomCount))
     /*const {x, y} = state
