@@ -3,13 +3,8 @@ import { atomEs5 } from './index'
 
 const store = getDefaultStore()
 
-const Tttt = `
-{
-  id: number
-}`
-
 export const extraLib = `
-  let item: ${Tttt}
+  let item: {id: number}
   const logger = (val) => {}
 `
 const data = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }]
